@@ -1,0 +1,133 @@
+1️⃣ Backspace String Compare
+
+Concept: Stack
+Link: https://leetcode.com/problems/backspace-string-compare/
+
+class Solution {
+public:
+    bool backspaceCompare(string s, string t) {
+        stack<char> a,b;
+        for(char c:s){
+            if(c=='#'){ if(!a.empty()) a.pop(); }
+            else a.push(c);
+        }
+        for(char c:t){
+            if(c=='#'){ if(!b.empty()) b.pop(); }
+            else b.push(c);
+        }
+        return a==b;
+    }
+};
+
+2️⃣ Make The String Great
+
+Concept: Stack (adjacent cancel)
+Link: https://leetcode.com/problems/make-the-string-great/
+
+class Solution {
+public:
+    string makeGood(string s) {
+        stack<char> st;
+        for(char c:s){
+            if(!st.empty() && abs(st.top()-c)==32) st.pop();
+            else st.push(c);
+        }
+        string ans="";
+        while(!st.empty()){ ans+=st.top(); st.pop(); }
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
+
+3️⃣ Remove Outermost Parentheses
+
+Concept: Stack + depth tracking
+Link: https://leetcode.com/problems/remove-outermost-parentheses/
+
+class Solution {
+public:
+    string removeOuterParentheses(string s) {
+        stack<char> st;
+        string ans="";
+        for(char c:s){
+            if(c=='('){
+                if(!st.empty()) ans+=c;
+                st.push(c);
+            }else{
+                st.pop();
+                if(!st.empty()) ans+=c;
+            }
+        }
+        return ans;
+    }
+};
+
+4️⃣ Baseball Game
+
+Concept: Stack simulation
+Link: https://leetcode.com/problems/baseball-game/
+
+class Solution {
+public:
+    int calPoints(vector<string>& ops) {
+        stack<int> st;
+        for(auto c:ops){
+            if(c=="+"){
+                int a=st.top(); st.pop();
+                int b=st.top();
+                st.push(a);
+                st.push(a+b);
+            }
+            else if(c=="D") st.push(2*st.top());
+            else if(c=="C") st.pop();
+            else st.push(stoi(c));
+        }
+        int sum=0;
+        while(!st.empty()){ sum+=st.top(); st.pop(); }
+        return sum;
+    }
+};
+
+5️⃣ Evaluate Reverse Polish Notation
+
+Concept: Stack (postfix evaluation)
+Link: https://leetcode.com/problems/evaluate-reverse-polish-notation/
+
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
+        stack<int> st;
+        for(auto t:tokens){
+            if(t=="+"||t=="-"||t=="*"||t=="/"){
+                int b=st.top(); st.pop();
+                int a=st.top(); st.pop();
+                if(t=="+") st.push(a+b);
+                else if(t=="-") st.push(a-b);
+                else if(t=="*") st.push(a*b);
+                else st.push(a/b);
+            }else{
+                st.push(stoi(t));
+            }
+        }
+        return st.top();
+    }
+};
+
+6️⃣ Assign Cookies
+
+Concept: Greedy + Sorting
+Link: https://leetcode.com/problems/assign-cookies/
+
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        sort(g.begin(),g.end());
+        sort(s.begin(),s.end());
+        int i=0,j=0,ans=0;
+        while(i<g.size() && j<s.size()){
+            if(s[j]>=g[i]){ ans++; i++; j++; }
+            else j++;
+        }
+        return ans;
+    }
+};
