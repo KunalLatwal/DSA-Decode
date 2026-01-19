@@ -20,7 +20,6 @@ public:
         s2.pop();
         return x;
     }
-
     int peek() {
         if (s2.empty()) {
             while (!s1.empty()) {
