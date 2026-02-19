@@ -1,23 +1,50 @@
-https://leetcode.com/problems/word-search/
-
 class Solution {
 public:
-    bool dfs(vector<vector<char>>& b, string& w, int i, int j, int k){
-        if(k==w.size()) return true;
-        if(i<0||j<0||i>=b.size()||j>=b[0].size()||b[i][j]!=w[k])
-            return false;
-        char ch=b[i][j];
-        b[i][j]='#';
-        bool found = dfs(b,w,i+1,j,k+1)||dfs(b,w,i-1,j,k+1)||
-                     dfs(b,w,i,j+1,k+1)||dfs(b,w,i,j-1,k+1);
-        b[i][j]=ch;
-        return found;
-    }
 
+    void dfs(vector<vector<char>>&board,vector<vector<bool>>&vis,int r,int c,int index,
+                bool &found,string word)
+    {
+        int row=board.size();
+        int col=board[0].size();
+
+        //pjela dekkheneg boundry check
+        if(r>=row || r<0 || c>=col || c<0) return;
+
+        if(vis[r][c]==true || board[r][c]!=word[index]) return;
+
+        //ab check hogi age badhne ki commands
+        if(index==word.length()-1 && board[r][c]==word[index]) 
+        {
+            found=true;
+            return;
+        }
+
+        vis[r][c]=true;
+
+        dfs(board,vis,r-1,c,index+1,found,word);
+        dfs(board,vis,r+1,c,index+1,found,word);
+        dfs(board,vis,r,c-1,index+1,found,word);
+        dfs(board,vis,r,c+1,index+1,found,word);
+
+        vis[r][c]=false;
+    }
     bool exist(vector<vector<char>>& board, string word) {
-        for(int i=0;i<board.size();i++)
-            for(int j=0;j<board[0].size();j++)
-                if(dfs(board,word,i,j,0)) return true;
-        return false;
+        int row=board.size();
+        int col=board[0].size();
+
+        vector<vector<bool>>vis(row,vector<bool>(col,false));
+        int index=0;
+        bool found=false;
+        for(int i=0;i<row;i++)
+        {
+            for(int j=0;j<col;j++)
+            {
+                if(board[i][j]==word[index] && vis[i][j]==false)
+                {
+                    dfs(board,vis,i,j,index,found,word);
+                }
+            }
+        }
+        return found;
     }
 };
