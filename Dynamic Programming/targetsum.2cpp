@@ -1,0 +1,53 @@
+class Solution {
+public:
+
+    int helper(int i,int target,vector<int>&nums,vector<vector<int>>&dp)
+    {
+
+        //go check the base case 
+        //since we strted from the n-1 index base case would be if we are in the 0 index
+        if(i==0)
+        {
+            if(target == 0 && nums[0] == 0) return dp[i][target] =  2;
+            if(target == 0) return dp[i][target] = 1;
+            if(nums[0] == target) return dp[i][target] = 1;
+            return dp[i][target] = 0;
+        }
+
+        if(dp[i][target] != -1) return dp[i][target];
+
+        int unpick = helper(i-1,target,nums,dp);
+
+        int pick = 0;
+
+        if(nums[i] <= target) pick = helper(i-1,target-nums[i],nums,dp);
+
+        return  dp[i][target] = pick+unpick;
+        //ab dekh phele express in the form of arguments 
+        //perform the stuff 
+        //go all the the possibilties 
+        //return the sum of possibilites
+    }
+    int findTargetSumWays(vector<int>& nums, int target) {
+        //mtlb hume kuch integers mai - or kuch mai + sign assign krke we have to make the required sum 
+        //so if we add P+N we get the total 
+        //if we SUB P-N = target 
+        //so adding them we get 2p = total + target
+        //so p = total + target /2;
+        //count the number of subsets withh sum = total+target/2
+        //case is ki taget is much smaller then the real total 
+        //4+(-1000) = -996 not possible so addup a condition 
+        int sum =0 ;
+        for(int i : nums)
+        {
+            sum+=i;
+        }
+        if((sum+target)%2!=0) return 0;
+        if(sum<abs(target)) return 0;
+        int t = (sum+target)/2;
+        int n = nums.size();
+        vector<vector<int>>dp(n,vector<int>(t+1,-1));
+        return helper(n-1,t,nums,dp);
+        //this function will return the number of subsets with the given target as sum 
+    }
+};
